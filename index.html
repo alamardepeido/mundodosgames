@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070b1a">
+<title>Mundo dos Games</title>
+<style>
+:root{
+  --bg:#070b1a; --bg2:#0d1330; --card:#111a3d; --card2:#16214d;
+  --line:#243066; --text:#e8ecff; --muted:#9aa5d6;
+  --purple:#8b5cf6; --blue:#3b82f6; --cyan:#22d3ee; --ok:#34d399; --warn:#fbbf24; --err:#f87171;
+  --grad:linear-gradient(135deg,var(--purple),var(--blue) 55%,var(--cyan));
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  background:radial-gradient(1200px 600px at 10% -10%,#1b1450 0,transparent 60%),
+             radial-gradient(900px 500px at 100% 0,#06304a 0,transparent 55%),var(--bg);
+  color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.5;
+}
+a{color:var(--cyan)}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+.container{width:min(1180px,100% - 32px);margin-inline:auto}
+
+/* Header */
+header{
+  position:sticky;top:0;z-index:50;background:rgba(7,11,26,.85);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:800;letter-spacing:.5px;font-size:1.15rem}
+.logo .ico{width:38px;height:38px;border-radius:12px;background:var(--grad);display:grid;place-items:center;box-shadow:0 0 18px rgba(139,92,246,.55)}
+.logo span b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.search{flex:1 1 260px;position:relative;min-width:0}
+.search input{
+  width:100%;padding:11px 16px 11px 42px;border-radius:999px;border:1px solid var(--line);
+  background:var(--bg2);outline:none;transition:.2s;
+}
+.search input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.7}
+.burger{display:none;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 12px;cursor:pointer}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav a{
+  text-decoration:none;color:var(--muted);padding:9px 14px;border-radius:999px;font-weight:600;font-size:.92rem;transition:.2s;white-space:nowrap
+}
+nav a:hover,nav a.active{color:#fff;background:var(--card2)}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:0;text-decoration:none;
+  padding:12px 20px;border-radius:12px;font-weight:700;letter-spacing:.3px;transition:.2s;color:#fff;background:var(--grad);
+  box-shadow:0 6px 20px rgba(59,130,246,.3);text-align:center;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(139,92,246,.45)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--text)}
+.btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn.danger{background:linear-gradient(135deg,#ef4444,#be185d)}
+.btn.full{width:100%}
+.btn.sm{padding:9px 14px;font-size:.85rem}
+
+/* Layout */
+main{padding:28px 0 60px}
+.hero{
+  border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,46px);margin-bottom:28px;
+  background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(34,211,238,.1)),var(--card);
+  display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+}
+.hero h1{font-size:clamp(1.7rem,5vw,2.8rem);line-height:1.1}
+.hero h1 b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);margin-top:10px;max-width:560px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:1.35rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  display:flex;flex-direction:column;transition:.25s;animation:rise .45s ease both;
+}
+.card:hover{transform:translateY(-5px);border-color:var(--purple);box-shadow:0 12px 30px rgba(139,92,246,.28)}
+.thumb{aspect-ratio:1/1;width:100%;background:var(--bg2);position:relative;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:10px;left:10px;background:rgba(7,11,26,.8);border:1px solid var(--line);padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:700;color:var(--cyan)}
+.card .body{padding:14px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card h3{font-size:1.02rem;overflow-wrap:anywhere;word-break:break-word}
+.card .body .btn{margin-top:auto}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(16px,3vw,28px)}
+.empty{text-align:center;padding:50px 16px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+
+/* Detail */
+.detail{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:28px;align-items:start}
+.detail .thumb{border-radius:var(--radius);border:1px solid var(--line)}
+.detail h1{font-size:clamp(1.5rem,4vw,2.2rem);overflow-wrap:anywhere;margin-bottom:10px}
+.detail .desc{white-space:pre-wrap;overflow-wrap:anywhere;color:#cfd6ff;margin:14px 0 22px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);font-size:.8rem;color:var(--muted)}
+.back{margin-bottom:18px}
+
+/* Forms */
+form{display:grid;gap:16px}
+label{font-weight:600;font-size:.92rem;display:block;margin-bottom:6px}
+input[type=text],input[type=url],select,textarea{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);outline:none;transition:.2s
+}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+textarea{min-height:130px;resize:vertical}
+.err{color:var(--err);font-size:.82rem;margin-top:5px;min-height:1em}
+.hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.9rem}
+.check input{margin-top:4px;accent-color:var(--purple);width:18px;height:18px;flex:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* Notices */
+.note{border-radius:14px;padding:14px 16px;border:1px solid;margin:14px 0;font-size:.92rem;overflow-wrap:anywhere}
+.note.info{background:rgba(34,211,238,.08);border-color:rgba(34,211,238,.4)}
+.note.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.45)}
+.note.error{background:rgba(248,113,113,.09);border-color:rgba(248,113,113,.5)}
+.note.ok{background:rgba(52,211,153,.09);border-color:rgba(52,211,153,.5)}
+.note strong{display:block;margin-bottom:4px}
+ol.steps{padding-left:22px;display:grid;gap:6px;color:#cfd6ff}
+
+/* Moderation */
+.req{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card2);margin-bottom:14px}
+.req .thumb{border-radius:12px;width:96px;height:96px;aspect-ratio:1/1}
+.req h3{overflow-wrap:anywhere}
+.req dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:.88rem;margin:8px 0 12px}
+.req dt{color:var(--muted)}
+.req dd{overflow-wrap:anywhere}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Dashboard */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.stat small{color:var(--muted)}
+.stat b{display:block;font-size:2.1rem;margin-top:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bar-row{display:grid;grid-template-columns:90px 1fr 40px;gap:12px;align-items:center;margin:10px 0}
+.bar-track{height:14px;border-radius:99px;background:var(--bg2);overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;background:var(--grad);border-radius:99px;transition:width .6s}
+
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:18px 0}
+.admin-grid .btn{padding:16px}
+
+.spinner{width:34px;height:34px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--cyan);animation:spin .8s linear infinite;margin:26px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.85rem;text-align:center}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--cyan);padding:12px 18px;border-radius:12px;z-index:99;max-width:calc(100% - 32px);animation:rise .3s ease}
+
+@media (max-width:860px){
+  .detail{grid-template-columns:1fr}
+  .burger{display:inline-flex;margin-left:auto}
+  nav{display:none;width:100%;flex-direction:column}
+  nav.open{display:flex}
+  nav a{background:var(--bg2);border-radius:12px}
+  .search{order:3;flex-basis:100%}
+}
+@media (max-width:560px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .two{grid-template-columns:1fr}
+  .req{grid-template-columns:1fr}
+  .req .thumb{width:100%;height:auto;max-width:180px}
+  .bar-row{grid-template-columns:70px 1fr 32px}
+  .card .body{padding:10px}
+  .card h3{font-size:.92rem}
+  .btn{padding:11px 14px}
+}
+@media (max-width:340px){.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container bar">
+    <a class="logo" href="#/" aria-label="Mundo dos Games - início">
+      <div class="ico" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10v5M4.5 12.5h5"/><circle cx="16" cy="11.5" r="1"/><circle cx="18.5" cy="14" r="1"/></svg>
+      </div>
+      <span>MUNDO DOS <b>GAMES</b></span>
+    </a>
+    <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9aa5d6" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Pesquisar jogos pelo nome..." autocomplete="off" aria-label="Pesquisar jogos">
+    </div>
+    <nav id="nav" aria-label="Principal">
+      <a href="#/" data-r="home">Início</a>
+      <a href="#/enviar" data-r="enviar">Enviar um jogo</a>
+      <a href="#/dashboard" data-r="dashboard">Dashboard</a>
+      <a href="#/moderacao" data-r="moderacao">Moderação</a>
+      <a href="#/admin" data-r="admin">Administrativo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container" id="app" tabindex="-1"></main>
+
+<footer>
+  <div class="container">Mundo dos Games · Hospedado no GitHub Pages · Solicitações via GitHub Issues · Todo jogo passa por análise antes de ser publicado.</div>
+</footer>
+
+<script>
+"use strict";
+/* =====================================================================
+   1) CONFIGURAÇÃO  -  EDITE AQUI
+   ===================================================================== */
+const GITHUB_OWNER  = "SEU_USUARIO";
+const GITHUB_REPO   = "NOME_DO_REPOSITORIO";
+const GITHUB_BRANCH = "main";
+
+/* Prefixo que identifica as Issues de pedido de publicação. */
+const ISSUE_PREFIX = "[SOLICITAÇÃO DE JOGO]";
+/* Etiqueta sugerida (só é aplicada se quem abre a Issue tiver permissão de triagem). */
+const ISSUE_LABEL  = "solicitacao-de-jogo";
+
+/* =====================================================================
+   2) CATÁLOGO DE JOGOS APROVADOS
+   ---------------------------------------------------------------------
+   COMO ADICIONAR UM JOGO (feito pelo administrador, direto no GitHub):
+   1. Abra a Issue da solicitação e confira tudo (link seguro, autorização).
+   2. No "Painel de Moderação" do site, use "COPIAR BLOCO DO CATÁLOGO".
+   3. No GitHub, abra o index.html (lápis "Edit this file") e cole o bloco
+      logo abaixo do último jogo, ANTES do "];" que fecha a lista.
+      Lembre de colocar uma vírgula entre os blocos.
+   4. Troque o status para "APROVADO" (só esse status aparece no site).
+   5. Clique em "Commit changes". Em ~1 minuto o site é atualizado.
+   Para tirar um jogo do ar: apague o bloco ou mude o status para "REJEITADO".
+   Campos: id (único), titulo, imagem (URL https, imagem quadrada),
+           descricao, download (URL https), plataforma ("PC" ou "Android"),
+           status ("APROVADO", "PENDENTE" ou "REJEITADO").
+   ===================================================================== */
+const games = [
+  /* ↓↓↓ EXEMPLOS - APAGUE ESTES DOIS BLOCOS ANTES DE PUBLICAR DE VERDADE ↓↓↓ */
+  {
+    id: 1,
+    titulo: "Exemplo: Aventura Espacial",
+    imagem: "",
+    descricao: "Este é um jogo de exemplo para você ver como o site fica.\n\nSubstitua por jogos reais, aprovados por você, editando a lista 'games' no index.html.",
+    download: "https://github.com/",
+    plataforma: "PC",
+    status: "APROVADO"
+  },
+  {
+    id: 2,
+    titulo: "Exemplo: Corrida Neon",
+    imagem: "",
+    descricao: "Outro jogo de exemplo, desta vez para Android. Quando não há imagem válida, o site mostra uma capa automática.",
+    download: "https://github.com/",
+    plataforma: "Android",
+    status: "APROVADO"
+  }
+  /* ↑↑↑ FIM DOS EXEMPLOS ↑↑↑ */
+];
+
+/* =====================================================================
+   3) UTILITÁRIOS
+   ===================================================================== */
+const $app = document.getElementById("app");
+const $q = document.getElementById("q");
+const state = { query: "", pending: null };
+
+/* Cria elementos de forma segura (sempre textContent / createTextNode). */
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  Object.entries(props || {}).forEach(([k, v]) => {
+    if (v === false || v == null) return;
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? "" : v);
+  });
+  kids.flat(Infinity).forEach(c => {
+    if (c === null || c === undefined || c === false) return;
+    el.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  });
+  return el;
+}
+
+/* Aceita somente URLs https:// válidas. Retorna a URL normalizada ou null. */
+function safeUrl(value) {
+  try {
+    const u = new URL(String(value || "").trim());
+    if (u.protocol !== "https:" || !u.hostname.includes(".")) return null;
+    return u.href;
+  } catch (e) { return null; }
+}
+
+function normalize(s) {
+  return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function configOk() {
+  return GITHUB_OWNER !== "SEU_USUARIO" && GITHUB_REPO !== "NOME_DO_REPOSITORIO";
+}
+const repoUrl = () => `https://github.com/${encodeURIComponent(GITHUB_OWNER)}/${encodeURIComponent(GITHUB_REPO)}`;
+
+function approvedGames() {
+  return games.filter(g => g && g.status === "APROVADO");
+}
+
+/* Capa automática (SVG) quando não há imagem ou ela falha ao carregar. */
+function placeholder(title) {
+  const t = (String(title || "?").replace(/^Exemplo:\s*/i, "").trim()[0] || "?").toUpperCase()
+    .replace(/[<>&"']/g, "?");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset=".6" stop-color="#3b82f6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/><text x="200" y="250" font-family="Arial" font-weight="800" font-size="190" fill="rgba(255,255,255,.9)" text-anchor="middle">${t}</text></svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+function gameImage(title, url, alt) {
+  const img = h("img", { alt: alt || title, loading: "lazy", referrerpolicy: "no-referrer" });
+  const ok = safeUrl(url);
+  img.src = ok || placeholder(title);
+  img.addEventListener("error", () => { img.src = placeholder(title); }, { once: true });
+  return img;
+}
+
+function toast(msg) {
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  const t = h("div", { class: "toast", role: "status" }, msg);
+  document.body.append(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+function note(kind, title, ...content) {
+  return h("div", { class: "note " + kind, role: kind === "error" ? "alert" : "note" },
+    title ? h("strong", null, title) : null, ...content);
+}
+
+function extLink(href, text, cls) {
+  return h("a", { href, target: "_blank", rel: "noopener noreferrer", class: cls || "" }, text);
+}
+
+/* =====================================================================
+   4) TELAS
+   ===================================================================== */
+
+/* ---------- Início ---------- */
+function renderHome() {
+  $app.replaceChildren();
+  const hero = h("section", { class: "hero" },
+    h("div", null,
+      h("h1", null, "Descubra jogos no ", h("b", null, "Mundo dos Games")),
+      h("p", null, "Explore o catálogo de jogos aprovados para PC e Android. Tem um jogo para compartilhar? Envie para análise.")
+    ),
+    h("a", { class: "btn", href: "#/enviar" }, "🎮 ENVIAR UM JOGO")
+  );
+  const title = h("div", { class: "section-title" }, h("h2", { id: "tituloLista" }, "Jogos aprovados"));
+  const grid = h("div", { class: "grid", id: "grid" });
+  $app.append(hero, title, grid);
+  if (!configOk()) {
+    $app.insertBefore(note("warn", "Configuração pendente",
+      "Edite GITHUB_OWNER e GITHUB_REPO no início do script do index.html para ativar o envio de jogos e o painel de moderação."), hero);
+  }
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  if (!grid) return;
+  grid.replaceChildren();
+  const q = normalize(state.query.trim());
+  const list = approvedGames().filter(g => normalize(g.titulo).includes(q));
+  const t = document.getElementById("tituloLista");
+  if (t) t.textContent = q ? `Resultados da pesquisa (${list.length})` : "Jogos aprovados";
+  if (!list.length) {
+    grid.style.display = "block";
+    grid.append(h("div", { class: "empty" },
+      q ? "Nenhum jogo encontrado. Tente pesquisar por outro nome."
+        : "Ainda não há jogos aprovados no catálogo."));
+    return;
+  }
+  grid.style.display = "";
+  list.forEach((g, i) => {
+    const card = h("article", { class: "card", style: `animation-delay:${Math.min(i, 12) * 40}ms` },
+      h("div", { class: "thumb" }, gameImage(g.titulo, g.imagem), h("span", { class: "badge" }, g.plataforma)),
+      h("div", { class: "body" },
+        h("h3", null, g.titulo),
+        h("a", { class: "btn sm", href: "#/jogo/" + encodeURIComponent(g.id) }, "VER MAIS")
+      )
+    );
+    grid.append(card);
+  });
+}
+
+/* ---------- Detalhe ---------- */
+function renderDetail(id) {
+  $app.replaceChildren();
+  const g = approvedGames().find(x => String(x.id) === String(id));
+  const back = h("a", { class: "btn ghost sm back", href: "#/" }, "← VOLTAR AO INÍCIO");
+  if (!g) {
+    $app.append(back, h("div", { class: "empty" }, "Este jogo não foi encontrado ou ainda não foi aprovado."));
+    return;
+  }
+  const dl = safeUrl(g.download);
+  $app.append(back, h("section", { class: "detail" },
+    h("div", { class: "thumb" }, gameImage(g.titulo, g.imagem)),
+    h("div", null,
+      h("div", { class: "tags" }, h("span", { class: "tag" }, g.plataforma), h("span", { class: "tag" }, "Aprovado")),
+      h("h1", null, g.titulo),
+      h("p", { class: "desc" }, g.descricao),
+      dl ? extLink(dl, "⬇ BAIXE AQUI", "btn")
+         : note("error", "Link indisponível", "O link de download deste jogo é inválido. Avise o administrador.")
+    )
+  ));
+}
+
+/* ---------- Enviar jogo ---------- */
+function buildIssueBody(d) {
+  return [
+    "### Nome do jogo", d.nome, "",
+    "### Plataforma", d.plataforma, "",
+    "### Imagem (URL)", d.imagem, "",
+    "### Link de download", d.download, "",
+    "### Autor", d.autor, "",
+    "### Descrição", d.descricao, "",
+    "### Declaração",
+    "- [x] O autor declarou ter autorização para compartilhar o material e respeitar os direitos autorais.", "",
+    "---",
+    "_Solicitação criada pelo formulário do site Mundo dos Games. O moderador deve verificar o link antes de aprovar._"
+  ].join("\n");
+}
+
+function renderSubmit() {
+  $app.replaceChildren();
+  const f = {};
+  const field = (key, label, input, hint) => {
+    f[key] = input;
+    return h("div", null, h("label", { for: "f_" + key }, label), input, hint ? h("div", { class: "hint" }, hint) : null,
+      h("div", { class: "err", id: "e_" + key, "aria-live": "polite" }));
+  };
+  const nome = h("input", { id: "f_nome", type: "text", maxlength: "80", autocomplete: "off" });
+  const imagem = h("input", { id: "f_imagem", type: "url", placeholder: "https://...", inputmode: "url" });
+  const descricao = h("textarea", { id: "f_descricao", maxlength: "1500" });
+  const download = h("input", { id: "f_download", type: "url", placeholder: "https://...", inputmode: "url" });
+  const plataforma = h("select", { id: "f_plataforma" },
+    h("option", { value: "" }, "Selecione..."), h("option", { value: "PC" }, "PC"), h("option", { value: "Android" }, "Android"));
+  const autor = h("input", { id: "f_autor", type: "text", maxlength: "60", autocomplete: "off" });
+  const aceite = h("input", { id: "f_aceite", type: "checkbox" });
+  f.aceite = aceite;
+
+  const result = h("div", { id: "result" });
+  const btn = h("button", { class: "btn full", type: "submit" }, "ENVIAR PARA ANÁLISE");
+
+  const form = h("form", { novalidate: true },
+    field("nome", "Nome do jogo", nome),
+    field("imagem", "Imagem do jogo (URL)", imagem, "Use o endereço (https) de uma imagem quadrada."),
+    field("descricao", "Descrição", descricao),
+    h("div", { class: "two" },
+      field("download", "Link de download", download, "Somente links https."),
+      field("plataforma", "Plataforma", plataforma)),
+    field("autor", "Nome ou identificação do autor", autor),
+    h("div", null,
+      h("label", { class: "check", for: "f_aceite" }, aceite,
+        h("span", null, "Declaro que tenho autorização para compartilhar estes materiais e que respeito os direitos autorais e as regras aplicáveis.")),
+      h("div", { class: "err", id: "e_aceite", "aria-live": "polite" })),
+    btn
+  );
+
+  form.addEventListener("submit", ev => {
+    ev.preventDefault();
+    const errs = {};
+    const d = {
+      nome: nome.value.trim(), imagem: imagem.value.trim(), descricao: descricao.value.trim(),
+      download: download.value.trim(), plataforma: plataforma.value, autor: autor.value.trim()
+    };
+    if (d.nome.length < 2) errs.nome = "Informe o nome do jogo.";
+    if (!safeUrl(d.imagem)) errs.imagem = "Informe uma URL de imagem válida começando com https://";
+    if (d.descricao.length < 10) errs.descricao = "Escreva uma descrição com pelo menos 10 caracteres.";
+    if (!safeUrl(d.download)) errs.download = "Informe um link de download válido começando com https://";
+    if (!["PC", "Android"].includes(d.plataforma)) errs.plataforma = "Escolha PC ou Android.";
+    if (d.autor.length < 2) errs.autor = "Informe o nome ou identificação do autor.";
+    if (!aceite.checked) errs.aceite = "Você precisa confirmar a declaração para continuar.";
+    ["nome", "imagem", "descricao", "download", "plataforma", "autor", "aceite"].forEach(k => {
+      document.getElementById("e_" + k).textContent = errs[k] || "";
+    });
+    result.replaceChildren();
+    if (Object.keys(errs).length) {
+      const first = Object.keys(errs)[0];
+      if (f[first]) f[first].focus();
+      return;
+    }
+    if (!configOk()) {
+      result.append(note("error", "Site não configurado",
+        "O administrador precisa editar GITHUB_OWNER e GITHUB_REPO no index.html antes de receber solicitações."));
+      return;
+    }
+    d.imagem = safeUrl(d.imagem); d.download = safeUrl(d.download);
+    const title = `${ISSUE_PREFIX} ${d.nome} (${d.plataforma})`;
+    const body = buildIssueBody(d);
+    const url = `${repoUrl()}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=${encodeURIComponent(ISSUE_LABEL)}`;
+    if (url.length > 7500) {
+      result.append(note("error", "Texto muito longo", "Reduza a descrição para o envio caber no endereço do GitHub."));
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+    result.append(
+      note("warn", "Falta um passo: confirme no GitHub",
+        "Abrimos o GitHub em uma nova aba com tudo preenchido. Sua solicitação só chega ao administrador depois que você clicar em ",
+        h("b", null, "“Submit new issue”"),
+        " lá. Você precisa estar logado na sua conta GitHub. Este site não consegue confirmar se você concluiu esse passo."),
+      h("div", { class: "actions" },
+        extLink(url, "Reabrir o GitHub", "btn sm"),
+        h("button", { class: "btn ghost sm", type: "button", onclick: () => copyText(body, "Texto copiado!") }, "Copiar texto da solicitação")),
+      note("info", "Depois de enviar",
+        "Seu jogo ficará aguardando análise. Se o administrador aprovar, ele aparecerá no catálogo após a próxima atualização do site.")
+    );
+  });
+
+  $app.append(
+    h("a", { class: "btn ghost sm back", href: "#/" }, "← VOLTAR AO INÍCIO"),
+    h("section", { class: "panel" },
+      h("h2", { style: "margin-bottom:6px" }, "Enviar um jogo"),
+      h("p", { class: "hint", style: "margin-bottom:12px" }, "Preencha os dados. Em seguida, o envio é finalizado no GitHub, que é onde as solicitações são recebidas e analisadas."),
+      note("info", "Por que preciso do GitHub?",
+        "Este site não tem banco de dados. As solicitações são recebidas como Issues no repositório, e por isso é necessário ter uma conta GitHub para concluir o envio."),
+      form, result)
+  );
+}
+
+function copyText(text, okMsg) {
+  const fallback = () => {
+    const ta = h("textarea", { style: "position:fixed;opacity:0" }); ta.value = text;
+    document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); toast(okMsg); } catch (e) { toast("Não foi possível copiar."); }
+    ta.remove();
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => toast(okMsg), fallback);
+  } else fallback();
+}
+
+/* ---------- API do GitHub: Issues pendentes ---------- */
+async function fetchPending() {
+  if (!configOk()) throw new Error("CONFIG");
+  const url = `https://api.github.com/repos/${encodeURIComponent(GITHUB_OWNER)}/${encodeURIComponent(GITHUB_REPO)}/issues?state=open&per_page=100`;
+  const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+  if (res.status === 403 || res.status === 429) throw new Error("RATE");
+  if (res.status === 404) throw new Error("NOTFOUND");
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  if (!Array.isArray(data)) throw new Error("FORMAT");
+  return data.filter(i => !i.pull_request && typeof i.title === "string" && i.title.startsWith(ISSUE_PREFIX));
+}
+
+function apiErrorNote(e) {
+  const m = String(e && e.message);
+  if (m === "CONFIG") return note("warn", "Configuração pendente", "Edite GITHUB_OWNER e GITHUB_REPO no index.html.");
+  if (m === "RATE") return note("error", "Limite de consultas atingido", "A API pública do GitHub limita as consultas sem login. Aguarde alguns minutos e tente novamente, ou abra as Issues diretamente no GitHub.");
+  if (m === "NOTFOUND") return note("error", "Repositório não encontrado", "Confira GITHUB_OWNER e GITHUB_REPO. O repositório precisa ser público para a consulta funcionar sem login.");
+  return note("error", "Não foi possível consultar o GitHub", "Verifique sua conexão e tente novamente. Detalhe: " + m);
+}
+
+function parseIssue(body) {
+  const out = {};
+  const txt = String(body || "");
+  const re = /^### (.+?)\n([\s\S]*?)(?=\n### |\n---|$)/gm;
+  let m;
+  while ((m = re.exec(txt))) out[m[1].trim()] = m[2].trim();
+  return out;
+}
+
+function catalogSnippet(p) {
+  const next = games.reduce((a, g) => Math.max(a, Number(g.id) || 0), 0) + 1;
+  const obj = {
+    id: next, titulo: p["Nome do jogo"] || "", imagem: p["Imagem (URL)"] || "",
+    descricao: p["Descrição"] || "", download: p["Link de download"] || "",
+    plataforma: p["Plataforma"] === "Android" ? "Android" : "PC", status: "APROVADO"
+  };
+  const q = s => JSON.stringify(s);
+  return `  ,{\n    id: ${obj.id},\n    titulo: ${q(obj.titulo)},\n    imagem: ${q(obj.imagem)},\n    descricao: ${q(obj.descricao)},\n    download: ${q(obj.download)},\n    plataforma: ${q(obj.plataforma)},\n    status: "APROVADO"\n  }`;
+}
+
+/* ---------- Moderação ---------- */
+async function renderModeration() {
+  $app.replaceChildren();
+  const list = h("div", { id: "reqs" }, h("div", { class: "spinner", role: "status", "aria-label": "Carregando" }));
+  $app.append(
+    h("a", { class: "btn ghost sm back", href: "#/" }, "← VOLTAR AO INÍCIO"),
+    h("section", { class: "panel" },
+      h("div", { class: "section-title" },
+        h("h2", null, "Painel de Moderação"),
+        h("button", { class: "btn sm", type: "button", onclick: () => renderModeration() }, "↻ ATUALIZAR")),
+      note("info", "Importante",
+        "Esta página apenas LISTA as solicitações abertas. Aprovar ou rejeitar é feito no GitHub, com a conta de quem tem permissão. Nenhuma senha ou token é usado aqui."),
+      h("h3", { style: "margin:14px 0 8px" }, "Como moderar"),
+      h("ol", { class: "steps" },
+        h("li", null, "Clique em “ANALISAR NO GITHUB” e abra a solicitação."),
+        h("li", null, "Confira os dados do jogo e as imagens."),
+        h("li", null, "Verifique se o link de download é seguro e autorizado."),
+        h("li", null, "Para rejeitar: comente o motivo e feche a Issue (“REJEITAR NO GITHUB”)."),
+        h("li", null, "Para aprovar: clique em “COPIAR BLOCO DO CATÁLOGO” e cole na lista “games” do index.html no GitHub."),
+        h("li", null, "Salve com “Commit changes” e feche a Issue. O jogo aparece no site após a publicação.")),
+      h("h3", { style: "margin:20px 0 10px" }, "Solicitações abertas"),
+      list)
+  );
+  try {
+    const items = await fetchPending();
+    state.pending = items.length;
+    list.replaceChildren();
+    if (!items.length) { list.append(h("div", { class: "empty" }, "Nenhuma solicitação aberta no momento.")); return; }
+    items.forEach(i => {
+      const p = parseIssue(i.body);
+      const dl = safeUrl(p["Link de download"]);
+      const title = p["Nome do jogo"] || i.title.replace(ISSUE_PREFIX, "").trim();
+      const issueHref = safeUrl(i.html_url) || repoUrl() + "/issues";
+      const desc = (p["Descrição"] || "").slice(0, 300);
+      list.append(h("article", { class: "req" },
+        h("div", { class: "thumb" }, gameImage(title, p["Imagem (URL)"])),
+        h("div", null,
+          h("h3", null, title),
+          h("dl", null,
+            h("dt", null, "Plataforma"), h("dd", null, p["Plataforma"] || "—"),
+            h("dt", null, "Autor"), h("dd", null, p["Autor"] || "—"),
+            h("dt", null, "Enviado por"), h("dd", null, i.user && i.user.login ? "@" + i.user.login : "—"),
+            h("dt", null, "Descrição"), h("dd", null, desc || "—"),
+            h("dt", null, "Download"), h("dd", null, dl ? extLink(dl, dl) : "Link inválido ou ausente")),
+          h("div", { class: "actions" },
+            extLink(issueHref, "ANALISAR NO GITHUB", "btn sm"),
+            extLink(issueHref, "REJEITAR NO GITHUB", "btn sm danger"),
+            h("button", { class: "btn ghost sm", type: "button",
+              onclick: () => copyText(catalogSnippet(p), "Bloco copiado! Cole no catálogo do index.html.") }, "COPIAR BLOCO DO CATÁLOGO"))
+        )
+      ));
+    });
+  } catch (e) {
+    list.replaceChildren(apiErrorNote(e));
+  }
+}
+
+/* ---------- Painel administrativo ---------- */
+function renderAdmin() {
+  $app.replaceChildren();
+  const b = repoUrl();
+  const links = !configOk()
+    ? note("warn", "Configuração pendente", "Edite GITHUB_OWNER e GITHUB_REPO para ativar os atalhos abaixo.")
+    : h("div", { class: "admin-grid" },
+        extLink(`${b}/issues?q=is%3Aissue+is%3Aopen`, "📥 Gerenciar solicitações", "btn"),
+        extLink(`${b}/issues?q=is%3Aissue+is%3Aopen+${encodeURIComponent('in:title "' + ISSUE_PREFIX + '"')}`, "⏳ Publicações pendentes", "btn"),
+        extLink(b, "📁 Acessar o repositório", "btn ghost"),
+        extLink(`${b}/blob/${encodeURIComponent(GITHUB_BRANCH)}/index.html`, "📚 Consultar o catálogo", "btn ghost"),
+        extLink(`${b}/edit/${encodeURIComponent(GITHUB_BRANCH)}/index.html`, "✏️ Editar catálogo (adicionar jogo)", "btn ghost"),
+        extLink(`${b}/settings`, "⚙️ Configurações do GitHub", "btn ghost"),
+        extLink(`${b}/settings/access`, "👥 Colaboradores e permissões", "btn ghost"),
+        extLink(`${b}/settings/pages`, "🌐 GitHub Pages", "btn ghost"));
+  $app.append(
+    h("a", { class: "btn ghost sm back", href: "#/" }, "← VOLTAR AO INÍCIO"),
+    h("section", { class: "panel" },
+      h("h2", { style: "margin-bottom:10px" }, "Painel Administrativo"),
+      note("info", "Onde acontecem as ações protegidas",
+        "A aprovação final e qualquer alteração administrativa são feitas diretamente no GitHub, por quem tem permissão no repositório. Este painel só oferece atalhos."),
+      links,
+      h("h3", { style: "margin:18px 0 8px" }, "Níveis de permissão"),
+      h("div", { class: "grid", style: "grid-template-columns:repeat(auto-fit,minmax(240px,1fr))" },
+        permCard("NORMAL", "Qualquer visitante", "Vê e pesquisa jogos, abre detalhes, baixa e envia solicitações (com conta GitHub)."),
+        permCard("PRO", "Colaborador com permissão Triage", "Ajuda na moderação: organiza, comenta e fecha Issues. Configurado em Settings → Collaborators."),
+        permCard("ADMIN", "Dono do repositório (Admin/Owner)", "Edita o index.html, aprova jogos no catálogo e controla configurações e colaboradores.")),
+      note("warn", "Por que não há login dentro do site?",
+        "O GitHub Pages é estático. Qualquer senha ou cargo no JavaScript ficaria visível a todos e poderia ser burlado. Por isso, PRO e ADMIN valem somente pelas permissões reais do GitHub."))
+  );
+}
+function permCard(nome, quem, texto) {
+  return h("div", { class: "stat" }, h("small", null, quem), h("b", { style: "font-size:1.5rem" }, nome),
+    h("p", { class: "hint", style: "margin-top:8px" }, texto));
+}
+
+/* ---------- Dashboard ---------- */
+function renderDashboard() {
+  $app.replaceChildren();
+  const ap = approvedGames();
+  const by = {};
+  ap.forEach(g => { by[g.plataforma] = (by[g.plataforma] || 0) + 1; });
+  const plats = Object.keys(by);
+  const pend = h("b", { id: "pendNum" }, state.pending == null ? "—" : String(state.pending));
+  const pendMsg = h("div", { id: "pendMsg" });
+  const loadBtn = h("button", { class: "btn sm", type: "button", style: "margin-top:10px" }, "CONSULTAR NO GITHUB");
+  loadBtn.addEventListener("click", async () => {
+    loadBtn.disabled = true; pendMsg.replaceChildren(h("div", { class: "spinner" }));
+    try {
+      const items = await fetchPending();
+      state.pending = items.length; pend.textContent = String(items.length); pendMsg.replaceChildren();
+    } catch (e) { pendMsg.replaceChildren(apiErrorNote(e)); }
+    loadBtn.disabled = false;
+  });
+  const total = ap.length || 1;
+  $app.append(
+    h("a", { class: "btn ghost sm back", href: "#/" }, "← VOLTAR AO INÍCIO"),
+    h("h2", { style: "margin-bottom:14px" }, "Dashboard"),
+    h("div", { class: "stats" },
+      h("div", { class: "stat" }, h("small", null, "Jogos aprovados"), h("b", null, String(ap.length))),
+      h("div", { class: "stat" }, h("small", null, "Plataformas representadas"), h("b", null, String(plats.length))),
+      h("div", { class: "stat" }, h("small", null, "Solicitações pendentes"), pend, loadBtn)),
+    pendMsg,
+    h("section", { class: "panel" },
+      h("h3", { style: "margin-bottom:8px" }, "Jogos por plataforma"),
+      plats.length ? plats.map(p => h("div", { class: "bar-row" },
+        h("span", null, p),
+        h("div", { class: "bar-track" }, h("div", { class: "bar-fill", style: `width:${(by[p] / total * 100).toFixed(1)}%` })),
+        h("b", null, String(by[p])))) : h("p", { class: "hint" }, "Sem dados ainda.")),
+    note("info", "Sobre usuários ativos",
+      "Não é possível saber quantas pessoas estão online ou logadas em um site estático do GitHub Pages sem um serviço de rastreamento ou backend. Por isso, não exibimos esse número.")
+  );
+}
+
+/* =====================================================================
+   5) ROTEADOR
+   ===================================================================== */
+function route() {
+  const hash = location.hash.replace(/^#/, "") || "/";
+  const parts = hash.split("/").filter(Boolean);
+  const r = parts[0] || "home";
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("active", a.dataset.r === (r === "jogo" ? "home" : r)));
+  document.getElementById("nav").classList.remove("open");
+  document.getElementById("burger").setAttribute("aria-expanded", "false");
+  switch (r) {
+    case "jogo": renderDetail(decodeURIComponent(parts[1] || "")); break;
+    case "enviar": renderSubmit(); break;
+    case "moderacao": renderModeration(); break;
+    case "admin": renderAdmin(); break;
+    case "dashboard": renderDashboard(); break;
+    default: renderHome();
+  }
+  window.scrollTo({ top: 0 });
+}
+
+$q.addEventListener("input", () => {
+  state.query = $q.value;
+  if (document.getElementById("grid")) renderGrid();
+  else { location.hash = "#/"; }
+});
+document.getElementById("burger").addEventListener("click", () => {
+  const n = document.getElementById("nav");
+  const open = n.classList.toggle("open");
+  document.getElementById("burger").setAttribute("aria-expanded", String(open));
+});
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
